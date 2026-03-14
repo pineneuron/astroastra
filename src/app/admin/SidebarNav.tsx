@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname, useSearchParams } from 'next/navigation'
-import { LayoutDashboard, FolderTree, Package, ShoppingCart, Settings, ChevronDown, Users, Bell, Wrench, Mail, PlusCircle, List, FileText } from 'lucide-react'
+import { LayoutDashboard, FolderTree, Package, Briefcase, ShoppingCart, CalendarCheck, Settings, ChevronDown, Users, Bell, Wrench, Mail, PlusCircle, List, FileText } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import * as Collapsible from '@radix-ui/react-collapsible'
 
@@ -18,8 +18,10 @@ export default function SidebarNav() {
     // Auto-open dropdown if current page is in that section
     if (pathname?.startsWith('/admin/categories')) {
       setOpenDropdown('categories')
-    } else if (pathname?.startsWith('/admin/products')) {
+    } else     if (pathname?.startsWith('/admin/products')) {
       setOpenDropdown('products')
+    } else if (pathname?.startsWith('/admin/services')) {
+      setOpenDropdown('services')
     } else if (pathname?.startsWith('/admin/pages')) {
       setOpenDropdown('pages')
     } else if (pathname?.startsWith('/admin/users')) {
@@ -42,6 +44,7 @@ export default function SidebarNav() {
 
   const isCategoriesActive = pathname?.startsWith('/admin/categories')
   const isProductsActive = pathname?.startsWith('/admin/products')
+  const isServicesActive = pathname?.startsWith('/admin/services')
   const isPagesActive = pathname?.startsWith('/admin/pages')
   const isUsersActive = pathname?.startsWith('/admin/users')
   const isSettingsActive = pathname?.startsWith('/admin/settings')
@@ -146,6 +149,46 @@ export default function SidebarNav() {
         </Collapsible.Content>
       </Collapsible.Root>
       
+      <Collapsible.Root open={openDropdown === 'services'} onOpenChange={(open) => handleDropdownToggle(open ? 'services' : '')}>
+        <Collapsible.Trigger 
+          className={cn(
+            "w-full flex items-center justify-between px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-colors",
+            isServicesActive && "bg-gray-100 text-gray-900"
+          )}
+        > 
+          <span className="inline-flex items-center gap-2">
+            <Briefcase className="h-4 w-4" />
+            <span className="sidebar-label">Services</span>
+          </span>
+          <ChevronDown className={cn("h-4 w-4 text-gray-500 transition-transform", openDropdown === 'services' && "rotate-180")} />
+        </Collapsible.Trigger>
+        <Collapsible.Content className="pl-6 pr-2 py-1 space-y-1">
+          <Link 
+            href="/admin/services#add"
+            prefetch={false}
+            scroll={false} 
+            className={cn(
+              "flex items-center gap-2 px-2 py-1 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100",
+              pathname === '/admin/services' && getHash() === '#add' && "bg-gray-100"
+            )}
+          >
+            <PlusCircle className="h-4 w-4 text-gray-400" />
+            <span className="sidebar-label">Add New</span>
+          </Link>
+          <Link 
+            href="/admin/services"
+            prefetch={false}
+            className={cn(
+              "flex items-center gap-2 px-2 py-1 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100",
+              pathname === '/admin/services' && getHash() !== '#add' && "bg-gray-100"
+            )}
+          >
+            <List className="h-4 w-4 text-gray-400" />
+            <span className="sidebar-label">All Services</span>
+          </Link>
+        </Collapsible.Content>
+      </Collapsible.Root>
+      
       <Collapsible.Root open={openDropdown === 'pages'} onOpenChange={(open) => handleDropdownToggle(open ? 'pages' : '')}>
         <Collapsible.Trigger 
           className={cn(
@@ -236,6 +279,18 @@ export default function SidebarNav() {
       > 
         <ShoppingCart className="h-4 w-4" />
         <span className="sidebar-label">Orders</span>
+      </Link>
+
+      <Link 
+        href="/admin/bookings"
+        prefetch={false}
+        className={cn(
+          "flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-colors",
+          pathname === '/admin/bookings' && "bg-gray-100 text-gray-900"
+        )}
+      > 
+        <CalendarCheck className="h-4 w-4" />
+        <span className="sidebar-label">Bookings</span>
       </Link>
       
       <Collapsible.Root open={openDropdown === 'settings'} onOpenChange={(open) => handleDropdownToggle(open ? 'settings' : '')}>

@@ -3,7 +3,7 @@ import { PrismaClient } from '@prisma/client'
 const prisma = new PrismaClient()
 
 async function main() {
-  const email = process.env.ADMIN_EMAIL || 'admin@3starfoods.test'
+  const email = process.env.ADMIN_EMAIL || 'hello@astroastra.ai'
   const user = await prisma.user.findUnique({ 
     where: { email },
     select: {
@@ -19,7 +19,7 @@ async function main() {
   if (!user) {
     console.log(`❌ User not found: ${email}`)
     console.log('\nTo create admin user, run:')
-    console.log('  ADMIN_EMAIL=admin@3starfoods.test ADMIN_PASSWORD=yourpassword node src/lib/scripts/seed-admin.mjs')
+    console.log('  ADMIN_EMAIL=hello@astroastra.ai ADMIN_PASSWORD=yourpassword node src/lib/scripts/seed-admin.mjs')
   } else {
     console.log(`✅ User found: ${email}`)
     console.log(`   ID: ${user.id}`)

@@ -4,17 +4,18 @@ import { useEffect, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useSession } from 'next-auth/react'
 import Image from 'next/image'
-import { Wrench, Settings, Bell, Mail, Upload, X } from 'lucide-react'
+import { Wrench, Settings, Bell, Mail, DollarSign, Upload, X } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import { getGeneralSettings, getNotificationSettings, getSmtpSettings, updateGeneralSettings, updateNotificationSettings, updatePassword, updateProfile, updateSmtpSettings } from './actions'
+import { getGeneralSettings, getNotificationSettings, getSmtpSettings, getExchangeRates, updateGeneralSettings, updateNotificationSettings, updateExchangeRates, updatePassword, updateProfile, updateSmtpSettings } from './actions'
 
-type SettingsCategory = 'profile' | 'general' | 'notifications' | 'smtp'
+type SettingsCategory = 'profile' | 'general' | 'notifications' | 'smtp' | 'currency'
 
 const settingsCategories = [
   { id: 'profile' as SettingsCategory, label: 'Profile', icon: Wrench },
   { id: 'general' as SettingsCategory, label: 'General', icon: Settings },
   { id: 'notifications' as SettingsCategory, label: 'Notifications', icon: Bell },
   { id: 'smtp' as SettingsCategory, label: 'SMTP', icon: Mail },
+  { id: 'currency' as SettingsCategory, label: 'Exchange Rates', icon: DollarSign },
 ]
 
 export default function SettingsPage() {
@@ -97,6 +98,8 @@ export default function SettingsPage() {
               {activeCategory === 'profile' && "Update your profile settings and personal preferences."}
               {activeCategory === 'general' && "Manage global site configuration and defaults."}
               {activeCategory === 'notifications' && "Control how the team receives alerts and updates."}
+              {activeCategory === 'smtp' && "Configure email server settings."}
+              {activeCategory === 'currency' && "Set exchange rates (NPR per 1 unit) for service price display."}
             </p>
           </div>
 
@@ -105,6 +108,7 @@ export default function SettingsPage() {
             {activeCategory === 'general' && <GeneralSection />}
             {activeCategory === 'notifications' && <NotificationsSection />}
             {activeCategory === 'smtp' && <SmtpSection />}
+            {activeCategory === 'currency' && <ExchangeRatesSection />}
           </div>
         </div>
       </div>
@@ -655,7 +659,6 @@ function GeneralSection() {
 function NotificationsSection() {
   const [orderEmailsInput, setOrderEmailsInput] = useState('')
   const [contactEmailsInput, setContactEmailsInput] = useState('')
-  const [orderWhatsAppNumbersInput, setOrderWhatsAppNumbersInput] = useState('')
 
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
@@ -676,7 +679,6 @@ function NotificationsSection() {
       if (result.ok && result.data) {
         setOrderEmailsInput(result.data.orderEmails.join('\n'))
         setContactEmailsInput(result.data.contactEmails.join('\n'))
-        setOrderWhatsAppNumbersInput(result.data.orderWhatsAppNumbers?.join('\n') || '')
         setNotificationError('')
       } else {
         setNotificationError(result.error || 'Failed to load notification settings')
@@ -706,10 +708,6 @@ function NotificationsSection() {
 
     const orderEmails = parseEmails(orderEmailsInput)
     const contactEmails = parseEmails(contactEmailsInput)
-    const orderWhatsAppNumbers = orderWhatsAppNumbersInput
-      .split(/[\n,]+/)
-      .map(num => num.trim())
-      .filter(Boolean)
 
     if (!orderEmails.length) {
       setOrderEmailError('Please provide at least one email address for order notifications')
@@ -725,15 +723,13 @@ function NotificationsSection() {
 
     const result = await updateNotificationSettings({
       orderEmails,
-      contactEmails,
-      orderWhatsAppNumbers
+      contactEmails
     })
 
     if (result.ok) {
       setNotificationSuccess('Notification preferences saved successfully')
       setOrderEmailsInput(orderEmails.join('\n'))
       setContactEmailsInput(contactEmails.join('\n'))
-      setOrderWhatsAppNumbersInput(orderWhatsAppNumbers.join('\n'))
     } else {
       setNotificationError(result.error || 'Failed to update notification settings')
     }
@@ -797,7 +793,7 @@ function NotificationsSection() {
           <p className="mt-1.5 text-xs text-red-600">{orderEmailError}</p>
         ) : (
           <p className="mt-1.5 text-xs text-gray-500">
-            Separate multiple email addresses with commas or new lines. All listed recipients will receive new order alerts.
+            Separate multiple email addresses with commas or new lines. All listed recipients will receive new order and booking alerts.
           </p>
         )}
       </div>
@@ -821,23 +817,6 @@ function NotificationsSection() {
             Messages submitted through the website contact form will be sent to these addresses.
           </p>
         )}
-      </div>
-
-      <div>
-        <label htmlFor="orderWhatsAppNumbers" className="block text-sm font-semibold text-gray-900 mb-1.5">
-          Order Notification WhatsApp Numbers
-        </label>
-        <textarea
-          id="orderWhatsAppNumbers"
-          name="orderWhatsAppNumbers"
-          value={orderWhatsAppNumbersInput}
-          onChange={(e) => setOrderWhatsAppNumbersInput(e.target.value)}
-          className="w-full min-h-[120px] resize-y px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-          placeholder="+9779812345678"
-        />
-        <p className="mt-1.5 text-xs text-gray-500">
-          Separate multiple WhatsApp numbers with commas or new lines. All listed numbers will receive new order notifications via WhatsApp. Format: +9779812345678 (include country code).
-        </p>
       </div>
 
       <div className="pt-2">
@@ -1127,7 +1106,7 @@ function SmtpSection() {
           value={fromName}
           onChange={(e) => setFromName(e.target.value)}
           className="w-full h-10 px-3 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-          placeholder="3 Star Foods"
+          placeholder="Astro Astra"
         />
         <p className="mt-1.5 text-xs text-gray-500">Display name used for outgoing emails.</p>
       </div>
@@ -1139,6 +1118,100 @@ function SmtpSection() {
           className="px-4 py-2 bg-gray-900 text-white text-sm font-medium rounded-md cursor-pointer hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {saving ? 'Saving...' : 'Save SMTP Settings'}
+        </button>
+      </div>
+    </form>
+  )
+}
+
+function ExchangeRatesSection() {
+  const router = useRouter()
+  const [usd, setUsd] = useState('133')
+  const [cad, setCad] = useState('100')
+  const [gbp, setGbp] = useState('170')
+  const [loading, setLoading] = useState(true)
+  const [saving, setSaving] = useState(false)
+  const [error, setError] = useState('')
+  const [success, setSuccess] = useState('')
+
+  useEffect(() => {
+    let ignore = false
+    const load = async () => {
+      setLoading(true)
+      const result = await getExchangeRates()
+      if (ignore) return
+      if (result.ok && result.data) {
+        setUsd(String(result.data.USD ?? 133))
+        setCad(String(result.data.CAD ?? 100))
+        setGbp(String(result.data.GBP ?? 170))
+      }
+      setLoading(false)
+    }
+    void load()
+    return () => { ignore = true }
+  }, [])
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setSaving(true)
+    setError('')
+    setSuccess('')
+    const usdNum = Number(usd)
+    const cadNum = Number(cad)
+    const gbpNum = Number(gbp)
+    if (Number.isNaN(usdNum) || usdNum <= 0 || Number.isNaN(cadNum) || cadNum <= 0 || Number.isNaN(gbpNum) || gbpNum <= 0) {
+      setError('All rates must be positive numbers')
+      setSaving(false)
+      return
+    }
+    const result = await updateExchangeRates({ USD: usdNum, CAD: cadNum, GBP: gbpNum })
+    if (result.ok) {
+      setSuccess('Exchange rates updated successfully')
+      router.refresh()
+    } else {
+      setError(result.error ?? 'Failed to update')
+    }
+    setSaving(false)
+  }
+
+  if (loading) {
+    return (
+      <div className="space-y-6 w-full lg:max-w-[75%]">
+        <div className="h-5 w-40 rounded bg-gray-200 animate-pulse" />
+        <div className="space-y-4">
+          {[1, 2, 3].map((i) => (
+            <div key={i} className="flex gap-4">
+              <div className="h-10 w-24 rounded bg-gray-200 animate-pulse" />
+              <div className="h-10 flex-1 rounded bg-gray-200 animate-pulse" />
+            </div>
+          ))}
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <form onSubmit={handleSubmit} className="space-y-6 w-full lg:max-w-[75%]">
+      {success && <div className="p-3 bg-green-50 border border-green-200 rounded-md text-sm text-green-600">{success}</div>}
+      {error && <div className="p-3 bg-red-50 border border-red-200 rounded-md text-sm text-red-600">{error}</div>}
+      <p className="text-sm text-gray-600">NPR per 1 unit of each currency. E.g. 133 means 1 USD = 133 NPR.</p>
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div>
+          <label htmlFor="rate-usd" className="block text-sm font-semibold text-gray-900 mb-1.5">USD (1 USD = ? NPR)</label>
+          <input id="rate-usd" type="number" min="0" step="0.01" value={usd} onChange={(e) => setUsd(e.target.value)} className="w-full h-10 px-3 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+        </div>
+        <div>
+          <label htmlFor="rate-cad" className="block text-sm font-semibold text-gray-900 mb-1.5">CAD (1 CAD = ? NPR)</label>
+          <input id="rate-cad" type="number" min="0" step="0.01" value={cad} onChange={(e) => setCad(e.target.value)} className="w-full h-10 px-3 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+        </div>
+        <div>
+          <label htmlFor="rate-gbp" className="block text-sm font-semibold text-gray-900 mb-1.5">GBP (1 GBP = ? NPR)</label>
+          <input id="rate-gbp" type="number" min="0" step="0.01" value={gbp} onChange={(e) => setGbp(e.target.value)} className="w-full h-10 px-3 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+        </div>
+      </div>
+      <div className="pt-2">
+        <button type="submit" disabled={saving} className="px-4 py-2 bg-gray-900 text-white text-sm font-medium rounded-md cursor-pointer hover:bg-gray-800 disabled:opacity-50">
+          {saving ? 'Saving...' : 'Save Exchange Rates'}
         </button>
       </div>
     </form>

@@ -10,9 +10,10 @@ import 'swiper/css/pagination';
 const slides = [
   {
     image: '/images/hero/banner-01.jpg',
-    heading: 'The most trusted name\nin the field of Astrology\nin Nepal',
-    subtext:
-      'Authentic and energized Rudraksha beads sourced from trusted origins. Each Rudraksha is carefully selected and purified to support spiritual growth, peace, and well-being.',
+    heading: 'Transform Your Home with Vastu',
+    subtext: 'Bring balance, positivity, and prosperity into your living space with expert Vastu guidance.',
+    buttonText: 'Book a Consultation',
+    buttonLink: '/services/home-vastu/book',
   },
 ];
 
@@ -32,7 +33,7 @@ export default function HeroBanner() {
       >
         {slides.map((slide, i) => (
           <SwiperSlide key={i}>
-            <div className="relative w-full h-[520px] md:h-[620px] lg:h-[720px] overflow-hidden">
+            <div className="relative w-full h-[calc(100vh-60px)] lg:h-[calc(100vh-146px)] overflow-hidden">
               {/* Background image */}
               <Image
                 src={slide.image}
@@ -56,14 +57,14 @@ export default function HeroBanner() {
                       {slide.subtext}
                     </p>
                     <Link
-                      href="/products"
+                      href={slide.buttonLink}
                       className="inline-flex items-center gap-3 h-[45px] px-6 rounded-[50px] text-white tsf-font-public-sans text-[16px]"
                       style={{
                         background:
                           'linear-gradient(to right, rgba(244,170,54,0.9), rgba(243,115,53,0.9))',
                       }}
                     >
-                      View All Product
+                      {slide.buttonText}
                       <Image
                         src="/images/hero-arrow-btn.svg"
                         alt=""
@@ -80,7 +81,7 @@ export default function HeroBanner() {
       </Swiper>
 
       {/* Torn bottom edge */}
-      <div className="absolute bottom-0 left-0 w-full h-3 lg:h-[42.526px] z-10 pointer-events-none">
+      {/* <div className="absolute bottom-0 left-0 w-full h-3 lg:h-[42.526px] z-10 pointer-events-none">
         <Image
           src="/images/pattern-hero.png"
           alt=""
@@ -88,7 +89,7 @@ export default function HeroBanner() {
           height={44}
           className="w-full h-auto"
         />
-      </div>
+      </div> */}
 
       <style>{`
         .hero-swiper { width: 100%; }

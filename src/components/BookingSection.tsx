@@ -2,16 +2,17 @@
 
 import Image from 'next/image';
 import { useState } from 'react';
+import { services } from '@/data/services';
 
 const chevronDown = (
   <svg width="16" height="10" viewBox="0 0 16 10" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M1 1L8 8L15 1" stroke="#353E5C" strokeWidth="1.5" strokeLinecap="round"/>
+    <path d="M1 1L8 8L15 1" stroke="#353E5C" strokeWidth="1.5" strokeLinecap="round" />
   </svg>
 );
 
 export default function BookingSection() {
   const [form, setForm] = useState({
-    name: '', gender: '', dob: '', tob: '', phone: '', place: '', email: '',
+    name: '', gender: '', dob: '', tob: '', phone: '', place: '', email: '', service: '',
   });
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) {
@@ -41,11 +42,25 @@ export default function BookingSection() {
         {/* Form card */}
         <div className="bg-[#ffeece] border border-black rounded-[10px] p-8">
           <form onSubmit={handleSubmit} className="flex flex-col gap-5">
-            {/* Row 1: Name | Gender */}
+            {/* Row 1: Full Name | Email */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               <div>
-                <label className={labelClass}>Name</label>
-                <input name="name" value={form.name} onChange={handleChange} placeholder="Full Name" className={inputClass} />
+                <label className={labelClass}>Full Name</label>
+                <input name="name" value={form.name} onChange={handleChange} placeholder="Your Full Name" className={inputClass} />
+              </div>
+              <div>
+                <label className={labelClass}>Email</label>
+                <input name="email" type="email" value={form.email} onChange={handleChange}
+                  placeholder="Your Email Address"
+                  className={`${inputClass} border-[#b4b9c9]`} />
+              </div>
+            </div>
+
+            {/* Row 2: Phone Number | Gender */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+              <div>
+                <label className={labelClass}>Phone Number</label>
+                <input name="phone" value={form.phone} onChange={handleChange} placeholder="987-xxxxxx" className={inputClass} />
               </div>
               <div>
                 <label className={labelClass}>Gender</label>
@@ -62,7 +77,7 @@ export default function BookingSection() {
               </div>
             </div>
 
-            {/* Row 2: Date of Birth | Time of Birth */}
+            {/* Row 3: Date of Birth | Time of Birth */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               <div>
                 <label className={labelClass}>Date of Birth</label>
@@ -82,34 +97,35 @@ export default function BookingSection() {
               </div>
             </div>
 
-            {/* Row 3: Phone | Place of Birth */}
+            {/* Row 4: Place of Birth | Service */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               <div>
-                <label className={labelClass}>Phone Number</label>
-                <input name="phone" value={form.phone} onChange={handleChange} placeholder="987-xxxxxx" className={inputClass} />
+                <label className={labelClass}>Place of Birth (City, Country)</label>
+                <input name="place" value={form.place} onChange={handleChange} placeholder="Your City & Country" className={inputClass} />
               </div>
               <div>
-                <label className={labelClass}>Place of Birth (City, Country)</label>
-                <input name="place" value={form.place} onChange={handleChange} placeholder="Select Location" className={inputClass} />
+                <label className={labelClass}>Service</label>
+                <div className="relative">
+                  <select name="service" value={form.service} onChange={handleChange}
+                    className={`${inputClass} appearance-none pr-10 cursor-pointer`}>
+                    <option value="">Select a Service</option>
+                    {services.map((svc) => (
+                      <option key={svc.href} value={svc.href}>{svc.title}</option>
+                    ))}
+                  </select>
+                  <span className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2">{chevronDown}</span>
+                </div>
               </div>
-            </div>
-
-            {/* Row 4: Email (full width) */}
-            <div>
-              <label className={labelClass}>Email</label>
-              <input name="email" type="email" value={form.email} onChange={handleChange}
-                placeholder="example@email.com"
-                className={`${inputClass} border-[#b4b9c9]`} />
             </div>
 
             {/* Submit */}
             <div className="flex justify-center mt-2">
               <button
                 type="submit"
-                className="inline-flex items-center gap-3 h-[44px] pl-6 pr-2 rounded-[27px] text-white tsf-font-larken-medium text-[16px] tracking-[-0.05em]"
+                className="inline-flex items-center gap-3 h-[44px] pl-6 pr-2 rounded-[27px] text-white tsf-font-public-sans text-[16px] tracking-[-0.05em]"
                 style={{ background: 'linear-gradient(to right, rgba(244,170,54,0.9), rgba(243,115,53,0.9))' }}
               >
-                Book Appointment
+                Book Your Appointment
                 <span className="flex items-center justify-center w-8 h-8 shrink-0">
                   <Image src="/images/icon-arrow-brown.svg" alt="" width={32} height={32} />
                 </span>

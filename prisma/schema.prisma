@@ -419,8 +419,91 @@ model Page {
 }
 
 // ===========================================
+// SERVICE BOOKINGS (separate from product orders)
+// ===========================================
+
+model Service {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  title       String
+  description String?
+  price       Decimal  @db.Decimal(10, 2)
+  priceUnit   String   @default("NPR") @map("price_unit")
+  imageUrl    String?  @map("image_url")
+  isActive    Boolean  @default(true) @map("is_active")
+  sortOrder   Int      @default(0) @map("sort_order")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  bookings Booking[]
+
+  @@map("services")
+}
+
+model Booking {
+  id             String       @id @default(cuid())
+  bookingNumber  String       @unique @map("booking_number")
+  serviceId      String       @map("service_id")
+
+  // Customer & birth details (same as BookingSection form)
+  fullName       String       @map("full_name")
+  email          String
+  phone          String
+  gender         String       // 'male', 'female', 'other'
+  dateOfBirth    DateTime     @map("date_of_birth") @db.Date
+  timeOfBirth    String       @map("time_of_birth")  // stored as HH:mm
+  placeOfBirth   String       @map("place_of_birth") // city, country
+
+  amount         Decimal      @db.Decimal(10, 2)
+  currency       String       @default("USD")
+  status         BookingStatus @default(PENDING)
+  paymentScreenshot String?   @map("payment_screenshot")
+  notes          String?
+
+  createdAt      DateTime     @default(now()) @map("created_at")
+  updatedAt      DateTime     @updatedAt @map("updated_at")
+
+  // Relations
+  service  Service   @relation(fields: [serviceId], references: [id], onDelete: Restrict)
+  payments Payment[]
+
+  @@index([serviceId])
+  @@index([status])
+  @@index([createdAt])
+  @@map("bookings")
+}
+
+model Payment {
+  id              String       @id @default(cuid())
+  bookingId       String       @map("booking_id")
+  amount          Decimal      @db.Decimal(10, 2)
+  currency        String       @default("USD")
+  method          String       // 'qr', 'card', 'bank_transfer', etc.
+  status          PaymentStatus @default(PENDING)
+  transactionId   String?      @map("transaction_id")
+  paidAt          DateTime?    @map("paid_at")
+  createdAt       DateTime     @default(now()) @map("created_at")
+  updatedAt       DateTime     @updatedAt @map("updated_at")
+
+  // Relations
+  booking Booking @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+
+  @@index([bookingId])
+  @@map("payments")
+}
+
+// ===========================================
 // ENUMS
 // ===========================================
+
+enum BookingStatus {
+  PENDING
+  CONFIRMED
+  PAID
+  COMPLETED
+  CANCELLED
+}
 
 enum OrderStatus {
   PENDING

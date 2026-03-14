@@ -83,9 +83,8 @@ export const authOptions: NextAuthOptions = {
       server: process.env.EMAIL_SERVER,
       from: process.env.EMAIL_FROM,
       async sendVerificationRequest({ identifier: email, url }) {
-        // Get base URL for logo
         const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || process.env.NEXTAUTH_URL || 'http://localhost:3000';
-        const logoUrl = `${baseUrl}/images/logo.png`;
+        const logoUrl = `${baseUrl}/images/logo-vertical.png`;
         const smtpSettings = await getSmtpSettings();
         const companyName = smtpSettings.fromName || process.env.MAIL_FROM_NAME || 'Astra';
         const companyEmail = smtpSettings.fromEmail || process.env.MAIL_FROM_EMAIL || process.env.EMAIL_FROM || 'noreply@3starfoods.com';
@@ -101,16 +100,16 @@ export const authOptions: NextAuthOptions = {
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sign in to ${companyName}</title>
 </head>
-<body style="margin:0;padding:0;background-color:#f5f5f5;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;">
-  <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#f5f5f5;padding:40px 0;">
+<body style="margin:0;padding:0;background-color:#faf8f6;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#faf8f6;padding:40px 0;">
     <tr>
       <td align="center">
         <table width="600" cellpadding="0" cellspacing="0" style="background-color:#ffffff;border-radius:4px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.1);">
           
           <!-- Header with Logo -->
           <tr>
-            <td style="background-color:#ffffff;padding:30px 40px;text-align:center;border-bottom:3px solid #0073aa;">
-              <img src="${logoUrl}" alt="${companyName}" style="max-width:200px;height:auto;display:block;margin:0 auto;" />
+            <td style="background-color:#ffffff;padding:30px 40px;text-align:center;border-bottom:3px solid #0d6800;">
+              <img src="${logoUrl}" alt="${companyName}" style="max-width:180px;height:auto;display:block;margin:0 auto;" />
             </td>
           </tr>
 
@@ -119,10 +118,10 @@ export const authOptions: NextAuthOptions = {
             <td style="padding:40px;">
               
               <!-- Title -->
-              <h1 style="margin:0 0 10px;color:#2c3e50;font-size:24px;font-weight:600;line-height:1.3;">Sign in to ${companyName}</h1>
+              <h1 style="margin:0 0 10px;color:#353E5C;font-size:24px;font-weight:600;line-height:1.3;">Sign in to ${companyName}</h1>
               
               <!-- Greeting -->
-              <p style="margin:0 0 20px;color:#555;font-size:15px;line-height:1.6;">
+              <p style="margin:0 0 20px;color:#575d73;font-size:15px;line-height:1.6;">
                 Click the button below to sign in to your account. This link will expire in 24 hours.
               </p>
 
@@ -130,21 +129,21 @@ export const authOptions: NextAuthOptions = {
               <table width="100%" cellpadding="0" cellspacing="0" style="margin:30px 0;">
                 <tr>
                   <td align="center">
-                    <a href="${url}" style="display:inline-block;padding:14px 32px;background-color:#030e55;color:#ffffff;text-decoration:none;border-radius:4px;font-weight:600;font-size:16px;text-align:center;">Sign in</a>
+                    <a href="${url}" style="display:inline-block;padding:14px 32px;background:linear-gradient(to right, rgba(244, 170, 54, 0.92), rgba(243, 115, 53, 0.92));background-color:#f37335;color:#ffffff;text-decoration:none;border-radius:4px;font-weight:600;font-size:16px;text-align:center;">Sign in</a>
                   </td>
                 </tr>
               </table>
 
               <!-- Alternative Link -->
-              <p style="margin:20px 0 0;color:#555;font-size:14px;line-height:1.6;">
+              <p style="margin:20px 0 0;color:#575d73;font-size:14px;line-height:1.6;">
                 Or copy and paste this link into your browser:
               </p>
-              <p style="margin:10px 0 30px;color:#0073aa;font-size:13px;word-break:break-all;line-height:1.6;">
-                <a href="${url}" style="color:#0073aa;text-decoration:underline;">${url}</a>
+              <p style="margin:10px 0 30px;color:#f37335;font-size:13px;word-break:break-all;line-height:1.6;">
+                <a href="${url}" style="color:#f37335;text-decoration:underline;">${url}</a>
               </p>
 
               <!-- Security Notice -->
-              <p style="margin:30px 0 0;color:#999;font-size:12px;line-height:1.6;">
+              <p style="margin:30px 0 0;color:#9094a1;font-size:12px;line-height:1.6;">
                 If you didn't request this sign-in link, you can safely ignore this email. No one can sign in to your account without access to this email.
               </p>
 
@@ -153,12 +152,12 @@ export const authOptions: NextAuthOptions = {
 
           <!-- Footer -->
           <tr>
-            <td style="background-color:#2c3e50;padding:30px 40px;text-align:center;">
+            <td style="background-color:#0d6800;padding:30px 40px;text-align:center;">
               <p style="margin:0 0 10px;color:#ffffff;font-size:14px;font-weight:600;">${companyName}</p>
               ${companyAddress ? `<p style="margin:0 0 5px;color:#b0b0b0;font-size:12px;">${companyAddress}</p>` : ''}
               ${companyPhone ? `<p style="margin:0 0 5px;color:#b0b0b0;font-size:12px;">Phone: <a href="tel:${companyPhone}" style="color:#ffffff;text-decoration:none;">${companyPhone}</a></p>` : ''}
               <p style="margin:0 0 5px;color:#b0b0b0;font-size:12px;">Email: <a href="mailto:${companyEmail}" style="color:#ffffff;text-decoration:none;">${companyEmail}</a></p>
-              <p style="margin:15px 0 0;color:#b0b0b0;font-size:11px;">© ${new Date().getFullYear()} ${companyName}. All rights reserved.</p>
+              <p style="margin:15px 0 0;color:#ffffff;font-size:11px;">© ${new Date().getFullYear()} ${companyName}. All rights reserved.</p>
             </td>
           </tr>
 

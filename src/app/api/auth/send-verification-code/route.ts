@@ -45,7 +45,7 @@ export async function POST(req: Request) {
 
     // Send email with verification code
     const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || process.env.NEXTAUTH_URL || 'http://localhost:3000';
-    const logoUrl = `${baseUrl}/images/logo.png`;
+    const logoUrl = `${baseUrl}/images/logo-vertical.png`;
     const companyName = process.env.MAIL_FROM_NAME || 'Astra';
     const companyEmail = process.env.MAIL_FROM_EMAIL || process.env.EMAIL_FROM || 'noreply@3starfoods.com';
     const companyAddress = process.env.COMPANY_ADDRESS || '';
@@ -68,8 +68,8 @@ export async function POST(req: Request) {
           
           <!-- Header with Logo -->
           <tr>
-            <td style="background-color:#ffffff;padding:30px 40px;text-align:center;border-bottom:3px solid #0073aa;">
-              <img src="${logoUrl}" alt="${companyName}" style="max-width:200px;height:auto;display:block;margin:0 auto;" />
+            <td style="background-color:#ffffff;padding:30px 40px;text-align:center;border-bottom:3px solid #0d6800;">
+              <img src="${logoUrl}" alt="${companyName}" style="max-width:180px;height:auto;display:block;margin:0 auto;" />
             </td>
           </tr>
 
@@ -78,26 +78,26 @@ export async function POST(req: Request) {
             <td style="padding:40px;">
               
               <!-- Title -->
-              <h1 style="margin:0 0 10px;color:#2c3e50;font-size:24px;font-weight:600;line-height:1.3;">Verify Your Email</h1>
+              <h1 style="margin:0 0 10px;color:#353E5C;font-size:24px;font-weight:600;line-height:1.3;">Verify Your Email</h1>
               
               <!-- Greeting -->
-              <p style="margin:0 0 20px;color:#555;font-size:15px;line-height:1.6;">
+              <p style="margin:0 0 20px;color:#575d73;font-size:15px;line-height:1.6;">
                 Thank you for registering with ${companyName}. Please use the verification code below to complete your registration.
               </p>
 
               <!-- Verification Code -->
-              <table width="100%" cellpadding="0" cellspacing="0" style="margin:30px 0;background-color:#f8f9fa;border-radius:8px;padding:30px;text-align:center;">
+              <table width="100%" cellpadding="0" cellspacing="0" style="margin:30px 0;background-color:#fff5eb;border-radius:8px;padding:30px;text-align:center;">
                 <tr>
                   <td>
-                    <p style="margin:0 0 15px;color:#555;font-size:14px;font-weight:600;text-transform:uppercase;letter-spacing:1px;">Your Verification Code</p>
-                    <div style="font-size:36px;font-weight:700;color:#030e55;letter-spacing:8px;font-family:'Courier New',monospace;">${code}</div>
-                    <p style="margin:15px 0 0;color:#999;font-size:12px;">This code will expire in 10 minutes</p>
+                    <p style="margin:0 0 15px;color:#575d73;font-size:14px;font-weight:600;text-transform:uppercase;letter-spacing:1px;">Your Verification Code</p>
+                    <div style="font-size:36px;font-weight:700;color:#f37335;letter-spacing:8px;font-family:'Courier New',monospace;">${code}</div>
+                    <p style="margin:15px 0 0;color:#9094a1;font-size:12px;">This code will expire in 10 minutes</p>
                   </td>
                 </tr>
               </table>
 
               <!-- Security Notice -->
-              <p style="margin:30px 0 0;color:#999;font-size:12px;line-height:1.6;">
+              <p style="margin:30px 0 0;color:#9094a1;font-size:12px;line-height:1.6;">
                 If you didn't request this verification code, you can safely ignore this email.
               </p>
 
@@ -106,12 +106,12 @@ export async function POST(req: Request) {
 
           <!-- Footer -->
           <tr>
-            <td style="background-color:#2c3e50;padding:30px 40px;text-align:center;">
+            <td style="background-color:#0d6800;padding:30px 40px;text-align:center;">
               <p style="margin:0 0 10px;color:#ffffff;font-size:14px;font-weight:600;">${companyName}</p>
               ${companyAddress ? `<p style="margin:0 0 5px;color:#b0b0b0;font-size:12px;">${companyAddress}</p>` : ''}
               ${companyPhone ? `<p style="margin:0 0 5px;color:#b0b0b0;font-size:12px;">Phone: <a href="tel:${companyPhone}" style="color:#ffffff;text-decoration:none;">${companyPhone}</a></p>` : ''}
               <p style="margin:0 0 5px;color:#b0b0b0;font-size:12px;">Email: <a href="mailto:${companyEmail}" style="color:#ffffff;text-decoration:none;">${companyEmail}</a></p>
-              <p style="margin:15px 0 0;color:#b0b0b0;font-size:11px;">© ${new Date().getFullYear()} ${companyName}. All rights reserved.</p>
+              <p style="margin:15px 0 0;color:#ffffff;font-size:11px;">© ${new Date().getFullYear()} ${companyName}. All rights reserved.</p>
             </td>
           </tr>
 

@@ -279,3 +279,43 @@ export const getWhatsAppSettings = unstable_cache(queryWhatsAppSettings, ['whats
 export const whatsappSettingUtils = {
   keys: WHATSAPP_SETTING_KEYS
 }
+
+// ===========================================
+// EXCHANGE RATES (NPR per 1 unit of currency)
+// ===========================================
+
+export type ExchangeRates = Record<string, number>  // e.g. { USD: 133, CAD: 100, GBP: 170 }
+
+const EXCHANGE_RATES_KEY = 'exchange_rates'
+
+const DEFAULT_EXCHANGE_RATES: ExchangeRates = {
+  USD: 133,
+  CAD: 100,
+  GBP: 170,
+}
+
+export async function getExchangeRates(): Promise<ExchangeRates> {
+  try {
+    const setting = await prisma.systemSetting.findUnique({
+      where: { key: EXCHANGE_RATES_KEY },
+    })
+    if (!setting || !setting.value) return { ...DEFAULT_EXCHANGE_RATES }
+    const parsed = JSON.parse(setting.value) as Record<string, unknown>
+    const rates: ExchangeRates = {}
+    for (const [k, v] of Object.entries(parsed)) {
+      const n = Number(v)
+      if (!Number.isNaN(n) && n > 0) rates[k] = n
+    }
+    return Object.keys(rates).length ? { ...DEFAULT_EXCHANGE_RATES, ...rates } : { ...DEFAULT_EXCHANGE_RATES }
+  } catch {
+    return { ...DEFAULT_EXCHANGE_RATES }
+  }
+}
+
+export async function updateExchangeRates(rates: ExchangeRates): Promise<void> {
+  await prisma.systemSetting.upsert({
+    where: { key: EXCHANGE_RATES_KEY },
+    create: { key: EXCHANGE_RATES_KEY, value: JSON.stringify(rates), type: 'json', category: 'general' },
+    update: { value: JSON.stringify(rates), type: 'json' },
+  })
+}

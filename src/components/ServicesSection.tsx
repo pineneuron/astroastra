@@ -1,18 +1,31 @@
+'use client';
+
 import Image from 'next/image';
 import Link from 'next/link';
+import { useCurrency } from '@/context/CurrencyContext';
+import { useFavourites } from '@/context/FavouritesContext';
 
-const services = [
-  { title: 'Vedic Gemstone',         price: '$39', image: '/images/services/svc-gemstone.jpg',   href: '/services/vedic-gemstone'         },
-  { title: 'Marriage Compatibility', price: '$99', image: '/images/services/svc-marriage.jpg',   href: '/services/marriage-compatibility'  },
-  { title: 'All Remedies',           price: '$39', image: '/images/services/svc-remedies.jpg',   href: '/services/all-remedies'           },
-  { title: 'Rudraksha',              price: '$39', image: '/images/services/svc-rudraksha.jpg',  href: '/services/rudraksha'              },
-  { title: 'Dhan Maha Yog',          price: '$39', image: '/images/services/dhan-maha-yog.png', href: '/services/laxmiyog'             },
-  { title: 'Numerology',             price: '$39', image: '/images/services/svc-numerology.jpg', href: '/services/numerology'             },
-  { title: 'Birth Chart',            price: '$39', image: '/images/services/svc-birthchart.jpg', href: '/services/birth-chart'            },
-  { title: 'Horoscope Matching',     price: '$39', image: '/images/services/svc-horoscope.jpg',  href: '/services/horoscope-matching'     },
-];
+export type ServiceItem = {
+  title: string;
+  price?: number;
+  priceUnit?: string;
+  /** Shown instead of price when no price/priceUnit (e.g. "Consult & discover") */
+  priceAlternativeText?: string;
+  image: string;
+  href: string;
+  slug: string;
+  buttonText: string;
+};
 
-export default function ServicesSection() {
+export default function ServicesSection({
+  services,
+  variant = 'section',
+}: {
+  services: ServiceItem[]
+  variant?: 'section' | 'page'
+}) {
+  const { formatPrice } = useCurrency();
+  const { isFavourite, toggleFavourite } = useFavourites();
   return (
     <section className="relative w-full bg-white py-14 overflow-hidden">
       {/* Faint decorative blobs */}
@@ -22,68 +35,103 @@ export default function ServicesSection() {
       <div className="max-w-[1200px] mx-auto px-6">
         {/* Header row */}
         <div className="flex items-center justify-between flex-col lg:flex-row mb-10">
-          <h2 className="tsf-font-larken text-black text-[36px]">
-            Our Latest Services
-          </h2>
-          <Link
-            href="/services"
-            className="flex items-center gap-2 tsf-font-public-sans font-medium text-[16px] text-black hover:opacity-70 transition-opacity"
-          >
-            View All Services
-            <Image src="/images/icon-arrow-right-sm.svg" alt="" width={16} height={10} />
-          </Link>
+          {variant === 'section' && (
+            <Link
+              href="/services"
+              className="flex items-center gap-2 tsf-font-public-sans font-medium text-[16px] text-black hover:opacity-70 transition-opacity"
+            >
+              View All Services
+              <Image src="/images/icon-arrow-right-sm.svg" alt="" width={16} height={10} />
+            </Link>
+          )}
         </div>
 
-        {/* Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-5">
+        {/* Services list */}
+        <div className="flex flex-wrap justify-center gap-5">
           {services.map((svc) => (
             <div
               key={svc.title}
-              className="bg-white border border-[#b4b9c9] rounded-[4px] overflow-hidden flex flex-col group"
+              className="flex flex-col group w-full md:w-[calc((100%-2.5rem)/3)] lg:w-[calc((100%-3.75rem)/4)] shrink-0 bg-white border border-[#b4b9c9] rounded-[4px] overflow-hidden"
             >
               {/* Image */}
-              <div className="relative h-[200px] w-full shrink-0 overflow-hidden">
+              <Link href={svc.href} className="relative h-[200px] w-full shrink-0 overflow-hidden block cursor-pointer">
                 <Image
                   src={svc.image}
                   alt={svc.title}
                   fill
                   className="object-cover transition-transform duration-300 group-hover:scale-105"
                 />
-                {/* Wishlist */}
+                {/* Favourite */}
                 <button
-                  aria-label="Add to wishlist"
-                  className="absolute top-2 right-2 w-8 h-8 flex items-center justify-center"
+                  type="button"
+                  aria-label={isFavourite(svc.slug) ? 'Remove from favourites' : 'Add to favourites'}
+                  className="absolute top-2 right-2 w-8 h-8 flex items-center justify-center z-10 cursor-pointer hover:opacity-80 transition-opacity rounded-full bg-white/80"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    toggleFavourite(svc.slug);
+                  }}
                 >
-                  <Image src="/images/icon-wishlist.svg" alt="" width={28} height={28} />
+                  {isFavourite(svc.slug) ? (
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6 text-[#d97706]">
+                      <path d="M11.645 20.91l-.007-.003-.022-.012a15.247 15.247 0 01-.383-.218 25.18 25.18 0 01-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0112 5.052 5.5 5.5 0 0116.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 01-4.244 3.17 15.247 15.247 0 01-.383.219l-.022.012-.007.004-.003.001a.752.752 0 01-.704 0l-.003-.001z" />
+                    </svg>
+                  ) : (
+                    <Image src="/images/icon-wishlist.svg" alt="" width={28} height={28} />
+                  )}
                 </button>
-              </div>
+              </Link>
 
               {/* Body */}
               <div className="p-4 flex flex-col flex-1">
-                <h3 className="tsf-font-larken-medium text-black text-[20px] tracking-[-0.05em] mb-2 leading-snug">
+                <Link href={svc.href} className="tsf-font-larken-medium text-black text-[20px] tracking-[-0.05em] mb-2 leading-snug block cursor-pointer hover:opacity-80 transition-opacity">
                   {svc.title}
-                </h3>
+                </Link>
 
-                {/* Price + Stars row */}
+                {/* Price + Stars row, or alternative text when no price */}
+                {(() => {
+                  const { price, priceUnit, priceAlternativeText } = svc;
+                  if (price != null && priceUnit) {
+                    return (
                 <div className="flex items-center gap-3 mb-4">
-                  {/* <span className="tsf-font-public-sans font-semibold text-[#d97706] text-[18px] tracking-[-0.05em]">
-                    {svc.price}
-                  </span> */}
-                  <div className="flex items-center gap-1">
-                    <Image src="/images/icon-stars.svg" alt="5 stars" width={80} height={14} />
-                    <span className="tsf-font-public-sans text-[#575d73] text-[13px]">(1.5k)</span>
+                  <span className="tsf-font-public-sans font-semibold text-[#d97706] text-[18px] tracking-[-0.05em]">
+                    {formatPrice(price, priceUnit)}
+                  </span>
+                  <div className="flex items-center gap-0.5" aria-label="4 to 5 stars">
+                    {[1, 2, 3, 4].map((i) => (
+                      <svg key={i} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4 text-[#d97706]">
+                        <path fillRule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007 5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433 2.082-5.006z" clipRule="evenodd" />
+                      </svg>
+                    ))}
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4 text-[#d97706] opacity-60">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z" />
+                    </svg>
                   </div>
                 </div>
+                    );
+                  }
+                  if (priceAlternativeText) {
+                    return (
+                <div className="flex items-center gap-3 mb-4">
+                  <span className="tsf-font-public-sans font-semibold text-[#d97706] text-[18px] tracking-[-0.05em]">
+                    {priceAlternativeText}
+                  </span>
+                </div>
+                    );
+                  }
+                  return null;
+                })()}
 
                 {/* Order Now button */}
                 <Link
-                  href="#"
-                  className="mt-auto flex items-center justify-center h-[46px] rounded-[2px] text-white tsf-font-larken-medium text-[13px] uppercase tracking-wide cursor-pointer"
+                  href={svc.href}
+                  className="mt-auto self-center w-fit inline-flex items-center justify-center gap-3 h-[45px] px-6 rounded-[50px] text-white tsf-font-public-sans text-[16px] cursor-pointer"
                   style={{
                     background: 'linear-gradient(to right, rgba(244,170,54,0.9), rgba(243,115,53,0.9))',
                   }}
                 >
-                  Order Now
+                  {svc.buttonText}
+                  <Image src="/images/hero-arrow-btn.svg" alt="" width={32} height={32} />
                 </Link>
               </div>
             </div>

@@ -1,6 +1,5 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import WhatsAppFloatingButton from '@/components/WhatsAppFloatingButton';
 
 const services = [
   { label: 'Training Programs', href: '#' },
@@ -138,15 +137,13 @@ export default function Footer() {
       {/* ── Copyright bar ─────────────────────────────────────────── */}
       <div className="relative border-t border-white/20">
         <div className="max-w-[1440px] mx-auto px-8 py-4 flex items-center justify-between flex-wrap gap-2">
-          <p className="text-[12px] text-white tsf-font-public-sans">© 2026 Astra. All Rights Reserved.</p>
+          <p className="text-[12px] text-white tsf-font-public-sans">© 2026 Astro Astra. All Rights Reserved.</p>
           <div className="flex items-center gap-8 text-[12px] text-white tsf-font-public-sans">
             <Link href="#" className="hover:underline">Terms and condition</Link>
             <Link href="#" className="hover:underline">Privacy Policy</Link>
           </div>
         </div>
       </div>
-
-      <WhatsAppFloatingButton />
     </footer>
   );
 }

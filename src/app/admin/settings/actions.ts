@@ -7,7 +7,7 @@ import { revalidatePath, revalidateTag } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { ValidationUtils } from '@/lib/utils'
 import bcrypt from 'bcryptjs'
-import { getGeneralSettings as fetchGeneralSettings, getNotificationSettings as fetchNotificationSettings, getSmtpSettings as fetchSmtpSettings, getWhatsAppSettings as fetchWhatsAppSettings, notificationSettingUtils, smtpSettingUtils, whatsappSettingUtils } from '@/lib/settings'
+import { getGeneralSettings as fetchGeneralSettings, getNotificationSettings as fetchNotificationSettings, getSmtpSettings as fetchSmtpSettings, getWhatsAppSettings as fetchWhatsAppSettings, getExchangeRates as fetchExchangeRates, updateExchangeRates as saveExchangeRates, notificationSettingUtils, smtpSettingUtils, whatsappSettingUtils } from '@/lib/settings'
 
 async function requireAuth() {
   const session = await getServerSession(authOptions)
@@ -38,7 +38,6 @@ type GeneralSettingsPayload = {
 type NotificationSettingsPayload = {
   orderEmails: string[]
   contactEmails: string[]
-  orderWhatsAppNumbers: string[]
 }
 
 type WhatsAppSettingsPayload = {
@@ -270,7 +269,6 @@ export async function updateNotificationSettings(payload: NotificationSettingsPa
 
   const orderEmails = Array.from(new Set(payload.orderEmails.map(email => email.trim()))).filter(Boolean)
   const contactEmails = Array.from(new Set(payload.contactEmails.map(email => email.trim()))).filter(Boolean)
-  const orderWhatsAppNumbers = Array.from(new Set(payload.orderWhatsAppNumbers.map(num => num.trim()))).filter(Boolean)
 
   if (!orderEmails.length) {
     return { ok: false, error: 'At least one order notification email is required' }
@@ -314,20 +312,6 @@ export async function updateNotificationSettings(payload: NotificationSettingsPa
         create: {
           key: notificationSettingUtils.keys.contactEmails,
           value: notificationSettingUtils.serializeEmailList(contactEmails),
-          type: 'string',
-          category: 'notifications'
-        }
-      }),
-      prisma.systemSetting.upsert({
-        where: { key: notificationSettingUtils.keys.orderWhatsAppNumbers },
-        update: {
-          value: notificationSettingUtils.serializeEmailList(orderWhatsAppNumbers),
-          type: 'string',
-          category: 'notifications'
-        },
-        create: {
-          key: notificationSettingUtils.keys.orderWhatsAppNumbers,
-          value: notificationSettingUtils.serializeEmailList(orderWhatsAppNumbers),
           type: 'string',
           category: 'notifications'
         }
@@ -504,5 +488,37 @@ export async function updateSmtpSettings({ host, port, user, password, fromEmail
   } catch (error) {
     console.error('Error updating SMTP settings:', error)
     return { ok: false, error: 'Failed to update SMTP settings' }
+  }
+}
+
+export async function getExchangeRates() {
+  const session = await requireAuth()
+  if (session.user?.role !== 'ADMIN') {
+    return { ok: false, error: 'Unauthorized' }
+  }
+  const rates = await fetchExchangeRates()
+  return { ok: true, data: rates }
+}
+
+export async function updateExchangeRates(rates: Record<string, number>) {
+  const session = await requireAuth()
+  if (session.user?.role !== 'ADMIN') {
+    return { ok: false, error: 'Unauthorized' }
+  }
+  const cleaned: Record<string, number> = {}
+  for (const [k, v] of Object.entries(rates)) {
+    const n = Number(v)
+    if (!Number.isNaN(n) && n > 0) cleaned[k] = n
+  }
+  if (Object.keys(cleaned).length === 0) {
+    return { ok: false, error: 'At least one valid exchange rate is required' }
+  }
+  try {
+    await saveExchangeRates(cleaned)
+    revalidatePath('/admin/settings')
+    return { ok: true }
+  } catch (error) {
+    console.error('Error updating exchange rates:', error)
+    return { ok: false, error: 'Failed to update exchange rates' }
   }
 }

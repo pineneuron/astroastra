@@ -2,8 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import nodemailer from 'nodemailer';
 import { prisma } from '@/lib/db';
 import { OrderStatus, PaymentStatus, Prisma } from '@prisma/client';
-import { getNotificationSettings, getSmtpSettings, getWhatsAppSettings } from '@/lib/settings';
-import { sendWhatsAppMessage, formatOrderMessage } from '@/lib/whatsapp';
+import { getNotificationSettings, getSmtpSettings } from '@/lib/settings';
 
 export async function POST(request: NextRequest) {
   try {
@@ -241,7 +240,7 @@ export async function POST(request: NextRequest) {
 
     // Get base URL for logo
     const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || process.env.NEXTAUTH_URL || 'http://localhost:3000';
-    const logoUrl = `${baseUrl}/images/logo.png`;
+    const logoUrl = `${baseUrl}/images/logo-vertical.png`;
     const companyName = fromName;
     const companyAddress = process.env.COMPANY_ADDRESS || '';
     const companyPhone = process.env.COMPANY_PHONE || '';
@@ -250,13 +249,13 @@ export async function POST(request: NextRequest) {
     // Generate order items HTML
     const itemsHtml = items.map((i) => `
       <tr>
-        <td style="padding:12px;border-bottom:1px solid #e0e0e0;vertical-align:top;">
-          <strong style="color:#2c3e50;font-size:14px;display:block;margin-bottom:4px;">${i.name}</strong>
-          ${i.image ? `<img src="${i.image.startsWith('http') ? i.image : `${baseUrl}${i.image}`}" alt="${i.name}" style="max-width:60px;height:auto;border:1px solid #e0e0e0;border-radius:4px;margin-top:8px;" />` : ''}
+        <td style="padding:12px;border-bottom:1px solid #e6ccc2;vertical-align:top;">
+          <strong style="color:#353E5C;font-size:14px;display:block;margin-bottom:4px;">${i.name}</strong>
+          ${i.image ? `<img src="${i.image.startsWith('http') ? i.image : `${baseUrl}${i.image}`}" alt="${i.name}" style="max-width:60px;height:auto;border:1px solid #e6ccc2;border-radius:4px;margin-top:8px;" />` : ''}
         </td>
-        <td style="padding:12px;border-bottom:1px solid #e0e0e0;text-align:center;color:#555;font-size:14px;">${i.qty}</td>
-        <td style="padding:12px;border-bottom:1px solid #e0e0e0;text-align:right;color:#555;font-size:14px;">Rs. ${i.price.toFixed(2)}</td>
-        <td style="padding:12px;border-bottom:1px solid #e0e0e0;text-align:right;color:#2c3e50;font-weight:600;font-size:14px;">Rs. ${(i.price * i.qty).toFixed(2)}</td>
+        <td style="padding:12px;border-bottom:1px solid #e6ccc2;text-align:center;color:#575d73;font-size:14px;">${i.qty}</td>
+        <td style="padding:12px;border-bottom:1px solid #e6ccc2;text-align:right;color:#575d73;font-size:14px;">Rs. ${i.price.toFixed(2)}</td>
+        <td style="padding:12px;border-bottom:1px solid #e6ccc2;text-align:right;color:#353E5C;font-weight:600;font-size:14px;">Rs. ${(i.price * i.qty).toFixed(2)}</td>
       </tr>
     `).join('');
 
@@ -282,16 +281,16 @@ export async function POST(request: NextRequest) {
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>${title}</title>
 </head>
-<body style="margin:0;padding:0;background-color:#f5f5f5;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;">
-  <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#f5f5f5;padding:40px 0;">
+<body style="margin:0;padding:0;background-color:#faf8f6;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#faf8f6;padding:40px 0;">
     <tr>
       <td align="center">
         <table width="600" cellpadding="0" cellspacing="0" style="background-color:#ffffff;border-radius:4px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.1);">
           
           <!-- Header with Logo -->
           <tr>
-            <td style="background-color:#ffffff;padding:30px 40px;text-align:center;border-bottom:3px solid #0073aa;">
-              <img src="${logoUrl}" alt="${companyName}" style="max-width:200px;height:auto;display:block;margin:0 auto;" />
+            <td style="background-color:#ffffff;padding:30px 40px;text-align:center;border-bottom:3px solid #0d6800;">
+              <img src="${logoUrl}" alt="${companyName}" style="max-width:180px;height:auto;display:block;margin:0 auto;" />
             </td>
           </tr>
 
@@ -300,65 +299,65 @@ export async function POST(request: NextRequest) {
             <td style="padding:40px;">
               
               <!-- Title -->
-              <h1 style="margin:0 0 10px;color:#2c3e50;font-size:24px;font-weight:600;line-height:1.3;">${title}</h1>
+              <h1 style="margin:0 0 10px;color:#353E5C;font-size:24px;font-weight:600;line-height:1.3;">${title}</h1>
               
               <!-- Order Number -->
-              <p style="margin:0 0 20px;color:#0073aa;font-size:16px;font-weight:600;">${orderNumberText}</p>
+              <p style="margin:0 0 20px;color:#f37335;font-size:16px;font-weight:600;">${orderNumberText}</p>
               
               <!-- Greeting -->
-              <p style="margin:0 0 30px;color:#555;font-size:15px;line-height:1.6;">${greeting}</p>
+              <p style="margin:0 0 30px;color:#575d73;font-size:15px;line-height:1.6;">${greeting}</p>
 
               <!-- Customer Details Section -->
-              <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:30px;background-color:#f8f9fa;border-radius:4px;overflow:hidden;">
+              <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:30px;background-color:#fff5eb;border-radius:4px;overflow:hidden;border:1px solid #e6ccc2;">
                 <tr>
                   <td style="padding:20px;">
-                    <h2 style="margin:0 0 15px;color:#2c3e50;font-size:18px;font-weight:600;border-bottom:2px solid #0073aa;padding-bottom:10px;">Customer Details</h2>
+                    <h2 style="margin:0 0 15px;color:#353E5C;font-size:18px;font-weight:600;border-bottom:2px solid #0d6800;padding-bottom:10px;">Customer Details</h2>
                     <table width="100%" cellpadding="0" cellspacing="0">
                       <tr>
-                        <td style="padding:8px 0;color:#555;font-size:14px;width:40%;"><strong>Name:</strong></td>
-                        <td style="padding:8px 0;color:#2c3e50;font-size:14px;">${customer.name}</td>
+                        <td style="padding:8px 0;color:#575d73;font-size:14px;width:40%;"><strong>Name:</strong></td>
+                        <td style="padding:8px 0;color:#353E5C;font-size:14px;">${customer.name}</td>
                       </tr>
                       <tr>
-                        <td style="padding:8px 0;color:#555;font-size:14px;"><strong>Email:</strong></td>
-                        <td style="padding:8px 0;color:#2c3e50;font-size:14px;"><a href="mailto:${customer.email}" style="color:#0073aa;text-decoration:none;">${customer.email}</a></td>
+                        <td style="padding:8px 0;color:#575d73;font-size:14px;"><strong>Email:</strong></td>
+                        <td style="padding:8px 0;color:#353E5C;font-size:14px;"><a href="mailto:${customer.email}" style="color:#f37335;text-decoration:none;">${customer.email}</a></td>
                       </tr>
                       <tr>
-                        <td style="padding:8px 0;color:#555;font-size:14px;"><strong>Phone:</strong></td>
-                        <td style="padding:8px 0;color:#2c3e50;font-size:14px;"><a href="tel:${customer.phone}" style="color:#0073aa;text-decoration:none;">${customer.phone}</a></td>
+                        <td style="padding:8px 0;color:#575d73;font-size:14px;"><strong>Phone:</strong></td>
+                        <td style="padding:8px 0;color:#353E5C;font-size:14px;"><a href="tel:${customer.phone}" style="color:#f37335;text-decoration:none;">${customer.phone}</a></td>
                       </tr>
                       ${customer.alternativePhone ? `
                       <tr>
-                        <td style="padding:8px 0;color:#555;font-size:14px;"><strong>Alternative Phone:</strong></td>
-                        <td style="padding:8px 0;color:#2c3e50;font-size:14px;"><a href="tel:${customer.alternativePhone}" style="color:#0073aa;text-decoration:none;">${customer.alternativePhone}</a></td>
+                        <td style="padding:8px 0;color:#575d73;font-size:14px;"><strong>Alternative Phone:</strong></td>
+                        <td style="padding:8px 0;color:#353E5C;font-size:14px;"><a href="tel:${customer.alternativePhone}" style="color:#f37335;text-decoration:none;">${customer.alternativePhone}</a></td>
                       </tr>
                       ` : ''}
                       <tr>
-                        <td style="padding:8px 0;color:#555;font-size:14px;"><strong>City:</strong></td>
-                        <td style="padding:8px 0;color:#2c3e50;font-size:14px;">${customer.city}</td>
+                        <td style="padding:8px 0;color:#575d73;font-size:14px;"><strong>City:</strong></td>
+                        <td style="padding:8px 0;color:#353E5C;font-size:14px;">${customer.city}</td>
                       </tr>
                       <tr>
-                        <td style="padding:8px 0;color:#555;font-size:14px;"><strong>Address:</strong></td>
-                        <td style="padding:8px 0;color:#2c3e50;font-size:14px;">${customer.address}</td>
+                        <td style="padding:8px 0;color:#575d73;font-size:14px;"><strong>Address:</strong></td>
+                        <td style="padding:8px 0;color:#353E5C;font-size:14px;">${customer.address}</td>
                       </tr>
                       ${customer.landmark ? `
                       <tr>
-                        <td style="padding:8px 0;color:#555;font-size:14px;"><strong>Landmark:</strong></td>
-                        <td style="padding:8px 0;color:#2c3e50;font-size:14px;">${customer.landmark}</td>
+                        <td style="padding:8px 0;color:#575d73;font-size:14px;"><strong>Landmark:</strong></td>
+                        <td style="padding:8px 0;color:#353E5C;font-size:14px;">${customer.landmark}</td>
                       </tr>
                       ` : ''}
                       ${customer.coords ? `
                       <tr>
-                        <td style="padding:8px 0;color:#555;font-size:14px;"><strong>Map:</strong></td>
-                        <td style="padding:8px 0;color:#2c3e50;font-size:14px;">
-                          <a href="${mapLink}" target="_blank" style="color:#0073aa;text-decoration:none;font-weight:600;">View on Google Maps</a>
-                          <span style="color:#999;font-size:12px;margin-left:8px;">(${coordsText})</span>
+                        <td style="padding:8px 0;color:#575d73;font-size:14px;"><strong>Map:</strong></td>
+                        <td style="padding:8px 0;color:#353E5C;font-size:14px;">
+                          <a href="${mapLink}" target="_blank" style="color:#f37335;text-decoration:none;font-weight:600;">View on Google Maps</a>
+                          <span style="color:#9094a1;font-size:12px;margin-left:8px;">(${coordsText})</span>
                         </td>
                       </tr>
                       ` : ''}
                       ${customer.notes ? `
                       <tr>
-                        <td style="padding:8px 0;color:#555;font-size:14px;vertical-align:top;"><strong>Notes:</strong></td>
-                        <td style="padding:8px 0;color:#2c3e50;font-size:14px;">${customer.notes}</td>
+                        <td style="padding:8px 0;color:#575d73;font-size:14px;vertical-align:top;"><strong>Notes:</strong></td>
+                        <td style="padding:8px 0;color:#353E5C;font-size:14px;">${customer.notes}</td>
                       </tr>
                       ` : ''}
                     </table>
@@ -367,14 +366,14 @@ export async function POST(request: NextRequest) {
               </table>
 
               <!-- Order Items Section -->
-              <h2 style="margin:0 0 15px;color:#2c3e50;font-size:18px;font-weight:600;border-bottom:2px solid #0073aa;padding-bottom:10px;">Order Items</h2>
-              <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:30px;border:1px solid #e0e0e0;border-radius:4px;overflow:hidden;">
+              <h2 style="margin:0 0 15px;color:#353E5C;font-size:18px;font-weight:600;border-bottom:2px solid #0d6800;padding-bottom:10px;">Order Items</h2>
+              <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:30px;background-color:#ffffff;border:1px solid #e6ccc2;border-radius:4px;overflow:hidden;">
                 <thead>
-                  <tr style="background-color:#f8f9fa;">
-                    <th style="padding:12px;text-align:left;color:#2c3e50;font-size:14px;font-weight:600;border-bottom:2px solid #e0e0e0;">Product</th>
-                    <th style="padding:12px;text-align:center;color:#2c3e50;font-size:14px;font-weight:600;border-bottom:2px solid #e0e0e0;">Quantity</th>
-                    <th style="padding:12px;text-align:right;color:#2c3e50;font-size:14px;font-weight:600;border-bottom:2px solid #e0e0e0;">Price</th>
-                    <th style="padding:12px;text-align:right;color:#2c3e50;font-size:14px;font-weight:600;border-bottom:2px solid #e0e0e0;">Total</th>
+                  <tr style="background-color:#fff5eb;">
+                    <th style="padding:12px;text-align:left;color:#353E5C;font-size:14px;font-weight:600;border-bottom:2px solid #e6ccc2;">Product</th>
+                    <th style="padding:12px;text-align:center;color:#353E5C;font-size:14px;font-weight:600;border-bottom:2px solid #e6ccc2;">Quantity</th>
+                    <th style="padding:12px;text-align:right;color:#353E5C;font-size:14px;font-weight:600;border-bottom:2px solid #e6ccc2;">Price</th>
+                    <th style="padding:12px;text-align:right;color:#353E5C;font-size:14px;font-weight:600;border-bottom:2px solid #e6ccc2;">Total</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -386,26 +385,26 @@ export async function POST(request: NextRequest) {
               <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:30px;">
                 <tr>
                   <td style="padding:0;">
-                    <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#f8f9fa;border-radius:4px;overflow:hidden;">
+                    <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#fff5eb;border-radius:4px;overflow:hidden;">
                       <tr>
-                        <td style="padding:15px;text-align:right;color:#555;font-size:14px;border-bottom:1px solid #e0e0e0;">
+                        <td style="padding:15px;text-align:right;color:#575d73;font-size:14px;border-bottom:1px solid #e6ccc2;">
                           <strong>Subtotal:</strong>
                         </td>
-                        <td style="padding:15px;text-align:right;color:#2c3e50;font-size:14px;font-weight:600;border-bottom:1px solid #e0e0e0;width:120px;">
+                        <td style="padding:15px;text-align:right;color:#353E5C;font-size:14px;font-weight:600;border-bottom:1px solid #e6ccc2;width:120px;">
                           Rs. ${summary.subtotal.toFixed(2)}
                         </td>
                       </tr>
                       ${summary.deliveryFee > 0 ? `
                       <tr>
-                        <td style="padding:15px;text-align:right;color:#555;font-size:14px;border-bottom:1px solid #e0e0e0;">
+                        <td style="padding:15px;text-align:right;color:#575d73;font-size:14px;border-bottom:1px solid #e6ccc2;">
                           <strong>Delivery Fee:</strong>
                         </td>
-                        <td style="padding:15px;text-align:right;color:#2c3e50;font-size:14px;font-weight:600;border-bottom:1px solid #e0e0e0;">
+                        <td style="padding:15px;text-align:right;color:#353E5C;font-size:14px;font-weight:600;border-bottom:1px solid #e6ccc2;">
                           Rs. ${summary.deliveryFee.toFixed(2)}
                         </td>
                       </tr>
                       ` : ''}
-                      <tr style="background-color:#0073aa;">
+                      <tr style="background:linear-gradient(to right, rgba(244, 170, 54, 0.92), rgba(243, 115, 53, 0.92));background-color:#f37335;">
                         <td style="padding:20px;text-align:right;color:#ffffff;font-size:16px;font-weight:600;">
                           <strong>Order Total:</strong>
                         </td>
@@ -419,28 +418,28 @@ export async function POST(request: NextRequest) {
               </table>
 
               <!-- Payment Method Section -->
-              <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:30px;background-color:#f8f9fa;border-radius:4px;overflow:hidden;">
+              <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:30px;background-color:#fff5eb;border-radius:4px;overflow:hidden;border:1px solid #e6ccc2;">
                 <tr>
                   <td style="padding:20px;">
-                    <h2 style="margin:0 0 15px;color:#2c3e50;font-size:18px;font-weight:600;border-bottom:2px solid #0073aa;padding-bottom:10px;">Payment Method</h2>
-                    <p style="margin:0 0 15px;color:#555;font-size:14px;">
+                    <h2 style="margin:0 0 15px;color:#353E5C;font-size:18px;font-weight:600;border-bottom:2px solid #0d6800;padding-bottom:10px;">Payment Method</h2>
+                    <p style="margin:0 0 15px;color:#575d73;font-size:14px;">
                       <strong>Payment Type:</strong> 
-                      <span style="color:#2c3e50;font-weight:600;">
+                      <span style="color:#353E5C;font-weight:600;">
                         ${cashOnDelivery ? 'Cash on Delivery / Pay Later' : 'Prepaid (Payment Screenshot Provided)'}
                       </span>
                     </p>
                     ${paymentScreenshot ? `
-                    <p style="margin:0 0 15px;color:#555;font-size:14px;">
-                      <a href="${paymentScreenshot}" target="_blank" style="color:#0073aa;text-decoration:underline;font-weight:600;">View Payment Screenshot</a>
+                    <p style="margin:0 0 15px;color:#575d73;font-size:14px;">
+                      <a href="${paymentScreenshot}" target="_blank" style="color:#f37335;text-decoration:underline;font-weight:600;">View Payment Screenshot</a>
                     </p>
-                    <img src="${paymentScreenshot}" alt="Payment Screenshot" style="max-width:100%;height:auto;border:2px solid #e0e0e0;border-radius:4px;display:block;" />
+                    <img src="${paymentScreenshot}" alt="Payment Screenshot" style="max-width:100%;height:auto;border:2px solid #e6ccc2;border-radius:4px;display:block;" />
                     ` : ''}
                   </td>
                 </tr>
               </table>
 
               <!-- Footer Message -->
-              <p style="margin:30px 0 0;color:#555;font-size:14px;line-height:1.6;">
+              <p style="margin:30px 0 0;color:#575d73;font-size:14px;line-height:1.6;">
                 ${isAdmin
           ? 'Please process this order and confirm delivery details with the customer.'
           : 'We\'ll send you another email when your order is ready for delivery. If you have any questions, please contact us.'}
@@ -451,12 +450,12 @@ export async function POST(request: NextRequest) {
 
           <!-- Footer -->
           <tr>
-            <td style="background-color:#2c3e50;padding:30px 40px;text-align:center;">
+            <td style="background-color:#0d6800;padding:30px 40px;text-align:center;">
               <p style="margin:0 0 10px;color:#ffffff;font-size:14px;font-weight:600;">${companyName}</p>
               ${companyAddress ? `<p style="margin:0 0 5px;color:#b0b0b0;font-size:12px;">${companyAddress}</p>` : ''}
               ${companyPhone ? `<p style="margin:0 0 5px;color:#b0b0b0;font-size:12px;">Phone: <a href="tel:${companyPhone}" style="color:#ffffff;text-decoration:none;">${companyPhone}</a></p>` : ''}
               <p style="margin:0 0 5px;color:#b0b0b0;font-size:12px;">Email: <a href="mailto:${companyEmail}" style="color:#ffffff;text-decoration:none;">${companyEmail}</a></p>
-              <p style="margin:15px 0 0;color:#b0b0b0;font-size:11px;">© ${new Date().getFullYear()} ${companyName}. All rights reserved.</p>
+              <p style="margin:15px 0 0;color:#ffffff;font-size:11px;">© ${new Date().getFullYear()} ${companyName}. All rights reserved.</p>
             </td>
           </tr>
 
@@ -501,61 +500,6 @@ export async function POST(request: NextRequest) {
     } catch (emailError) {
       console.error('Failed to send customer email:', emailError);
       // Don't fail the request if email fails - order is already saved
-    }
-
-    // Send WhatsApp notifications to admin numbers
-    const whatsappSettings = await getWhatsAppSettings();
-    const whatsappNumbers = notificationSettings.orderWhatsAppNumbers || [];
-
-    if (whatsappSettings.accessToken && whatsappSettings.phoneNumberId && whatsappNumbers.length > 0) {
-      const orderMessage = formatOrderMessage({
-        orderNumber: savedOrder.orderNumber,
-        customerName: customer.name,
-        customerPhone: customer.phone,
-        customerEmail: customer.email,
-        customerAddress: customer.address,
-        customerCity: customer.city,
-        items: items.map(i => ({
-          name: i.name,
-          qty: i.qty,
-          price: i.price
-        })),
-        subtotal: summary.subtotal,
-        deliveryFee: summary.deliveryFee,
-        total: summary.total,
-        paymentMethod: paymentMethod,
-        paymentScreenshot: paymentScreenshot || undefined
-      });
-
-      // Send WhatsApp message to each admin number
-      for (const phoneNumber of whatsappNumbers) {
-        try {
-          const result = await sendWhatsAppMessage(
-            {
-              accessToken: whatsappSettings.accessToken,
-              phoneNumberId: whatsappSettings.phoneNumberId,
-              businessAccountId: whatsappSettings.businessAccountId
-            },
-            {
-              to: phoneNumber,
-              message: orderMessage
-            }
-          );
-
-          if (!result.success) {
-            console.error(`[WhatsApp] Failed to send to ${phoneNumber}:`, result.error);
-          } else {
-            console.log(`[WhatsApp] Message sent successfully to ${phoneNumber}`);
-          }
-        } catch (whatsappError) {
-          console.error(`[WhatsApp] Error sending to ${phoneNumber}:`, whatsappError);
-          // Don't fail the request if WhatsApp fails - order is already saved
-        }
-      }
-    } else {
-      if (whatsappNumbers.length > 0) {
-        console.warn('[WhatsApp] WhatsApp settings incomplete. Skipping WhatsApp notifications.');
-      }
     }
 
     return NextResponse.json({ ok: true });

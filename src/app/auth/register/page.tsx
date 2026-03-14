@@ -239,15 +239,23 @@ export default function RegisterPage() {
           <button
             type="submit"
             disabled={sendingCode}
-            className="w-full py-2 bg-[#030e55] text-white rounded font-bold cursor-pointer transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+            className="w-full h-[44px] pl-6 pr-2 rounded-[27px] text-white tsf-font-public-sans text-[16px] font-semibold cursor-pointer transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3"
+            style={{ background: 'linear-gradient(to right, rgba(243,115,53,0.9), rgba(244,170,54,0.9))' }}
           >
-            {sendingCode && (
-              <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-              </svg>
+            {sendingCode ? (
+              <>
+                <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                Registering...
+              </>
+            ) : (
+              <>
+                Register
+                <Image src="/images/hero-arrow-btn.svg" alt="" width={24} height={24} />
+              </>
             )}
-            {sendingCode ? "Registering..." : "Register"}
           </button>
         </form>
       ) : (
@@ -280,33 +288,41 @@ export default function RegisterPage() {
             <button
               type="button"
               onClick={() => { setStep("form"); setVerificationCode(""); setError(""); setSuccess(""); }}
-              className="flex-1 py-2 bg-gray-200 text-gray-700 rounded font-bold cursor-pointer transition-colors hover:bg-gray-300"
+              className="flex-1 h-[44px] px-6 rounded-[27px] border-2 border-[#b4b9c9] text-black tsf-font-public-sans text-[16px] font-medium cursor-pointer transition-colors hover:bg-gray-50"
             >
               Change Email
             </button>
             <button
               type="submit"
               disabled={loading || verificationCode.length !== 6}
-              className="flex-1 py-2 bg-[#030e55] text-white rounded font-bold cursor-pointer transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              className="flex-1 h-[44px] pl-6 pr-2 rounded-[27px] text-white tsf-font-public-sans text-[16px] font-semibold cursor-pointer transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3"
+              style={{ background: 'linear-gradient(to right, rgba(243,115,53,0.9), rgba(244,170,54,0.9))' }}
             >
-              {loading && (
-                <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                </svg>
+              {loading ? (
+                <>
+                  <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  Verifying...
+                </>
+              ) : (
+                <>
+                  Verify & Register
+                  <Image src="/images/hero-arrow-btn.svg" alt="" width={24} height={24} />
+                </>
               )}
-              {loading ? "Verifying..." : "Verify & Register"}
             </button>
           </div>
         </form>
       )}
       <div className="flex flex-col gap-2 my-4">
         <button onClick={() => loginWith("google")}
-          className="w-full flex items-center justify-center bg-white border border-gray-300 rounded py-2 font-semibold hover:bg-gray-50">
+          className="w-full h-[44px] flex items-center justify-center bg-white border-2 border-[#b4b9c9] rounded-[27px] text-black tsf-font-public-sans text-[16px] font-medium hover:bg-gray-50 transition-colors">
           <Image src="/images/google.svg" alt="Google" width={20} height={20} className="mr-2" /> Continue with Google
         </button>
         <button onClick={() => loginWith("facebook")}
-          className="w-full flex items-center justify-center bg-white border border-gray-300 rounded py-2 font-semibold hover:bg-gray-50 hidden">
+          className="w-full h-[44px] flex items-center justify-center bg-white border-2 border-[#b4b9c9] rounded-[27px] text-black tsf-font-public-sans text-[16px] font-medium hover:bg-gray-50 transition-colors hidden">
           <Image src="/images/facebook.svg" alt="Facebook" width={20} height={20} className="mr-2" /> Continue with Facebook
         </button>
       </div>

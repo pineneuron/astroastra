@@ -61,7 +61,7 @@ export async function POST(req: Request) {
     // Send email with reset link
     const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || process.env.NEXTAUTH_URL || 'http://localhost:3000'
     const resetUrl = `${baseUrl}/auth/reset-password?token=${token}&email=${encodeURIComponent(normalizedEmail)}`
-    const logoUrl = `${baseUrl}/images/logo.png`
+    const logoUrl = `${baseUrl}/images/logo-vertical.png`
     const companyName = process.env.MAIL_FROM_NAME || 'Astra'
     const companyEmail = process.env.MAIL_FROM_EMAIL || process.env.EMAIL_FROM || 'noreply@3starfoods.com'
     const companyAddress = process.env.COMPANY_ADDRESS || ''
@@ -76,16 +76,16 @@ export async function POST(req: Request) {
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Reset Your Password - ${companyName}</title>
 </head>
-<body style="margin:0;padding:0;background-color:#f5f5f5;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;">
-  <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#f5f5f5;padding:40px 0;">
+<body style="margin:0;padding:0;background-color:#faf8f6;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#faf8f6;padding:40px 0;">
     <tr>
       <td align="center">
         <table width="600" cellpadding="0" cellspacing="0" style="background-color:#ffffff;border-radius:4px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.1);">
           
           <!-- Header with Logo -->
           <tr>
-            <td style="background-color:#ffffff;padding:30px 40px;text-align:center;border-bottom:3px solid #0073aa;">
-              <img src="${logoUrl}" alt="${companyName}" style="max-width:200px;height:auto;display:block;margin:0 auto;" />
+            <td style="background-color:#ffffff;padding:30px 40px;text-align:center;border-bottom:3px solid #0d6800;">
+              <img src="${logoUrl}" alt="${companyName}" style="max-width:180px;height:auto;display:block;margin:0 auto;" />
             </td>
           </tr>
 
@@ -94,10 +94,10 @@ export async function POST(req: Request) {
             <td style="padding:40px;">
               
               <!-- Title -->
-              <h1 style="margin:0 0 10px;color:#2c3e50;font-size:24px;font-weight:600;line-height:1.3;">Reset Your Password</h1>
+              <h1 style="margin:0 0 10px;color:#353E5C;font-size:24px;font-weight:600;line-height:1.3;">Reset Your Password</h1>
               
               <!-- Greeting -->
-              <p style="margin:0 0 20px;color:#555;font-size:15px;line-height:1.6;">
+              <p style="margin:0 0 20px;color:#575d73;font-size:15px;line-height:1.6;">
                 We received a request to reset your password for your ${companyName} account. Click the button below to create a new password.
               </p>
 
@@ -105,19 +105,19 @@ export async function POST(req: Request) {
               <table width="100%" cellpadding="0" cellspacing="0" style="margin:30px 0;">
                 <tr>
                   <td align="center">
-                    <a href="${resetUrl}" style="display:inline-block;padding:14px 32px;background-color:#030e55;color:#ffffff;text-decoration:none;border-radius:4px;font-weight:600;font-size:16px;">Reset Password</a>
+                    <a href="${resetUrl}" style="display:inline-block;padding:14px 32px;background:linear-gradient(to right, rgba(244, 170, 54, 0.92), rgba(243, 115, 53, 0.92));background-color:#f37335;color:#ffffff;text-decoration:none;border-radius:4px;font-weight:600;font-size:16px;">Reset Password</a>
                   </td>
                 </tr>
               </table>
 
               <!-- Alternative Link -->
-              <p style="margin:20px 0 0;color:#999;font-size:13px;line-height:1.6;">
+              <p style="margin:20px 0 0;color:#9094a1;font-size:13px;line-height:1.6;">
                 If the button doesn't work, copy and paste this link into your browser:<br>
-                <a href="${resetUrl}" style="color:#030e55;word-break:break-all;">${resetUrl}</a>
+                <a href="${resetUrl}" style="color:#f37335;word-break:break-all;">${resetUrl}</a>
               </p>
 
               <!-- Security Notice -->
-              <p style="margin:30px 0 0;color:#999;font-size:12px;line-height:1.6;">
+              <p style="margin:30px 0 0;color:#9094a1;font-size:12px;line-height:1.6;">
                 This link will expire in 1 hour. If you didn't request a password reset, please ignore this email or contact support if you have concerns.
               </p>
 
@@ -126,12 +126,12 @@ export async function POST(req: Request) {
 
           <!-- Footer -->
           <tr>
-            <td style="background-color:#2c3e50;padding:30px 40px;text-align:center;">
+            <td style="background-color:#0d6800;padding:30px 40px;text-align:center;">
               <p style="margin:0 0 10px;color:#ffffff;font-size:14px;font-weight:600;">${companyName}</p>
               ${companyAddress ? `<p style="margin:0 0 5px;color:#b0b0b0;font-size:12px;">${companyAddress}</p>` : ''}
               ${companyPhone ? `<p style="margin:0 0 5px;color:#b0b0b0;font-size:12px;">Phone: <a href="tel:${companyPhone}" style="color:#ffffff;text-decoration:none;">${companyPhone}</a></p>` : ''}
               <p style="margin:0 0 5px;color:#b0b0b0;font-size:12px;">Email: <a href="mailto:${companyEmail}" style="color:#ffffff;text-decoration:none;">${companyEmail}</a></p>
-              <p style="margin:15px 0 0;color:#b0b0b0;font-size:11px;">© ${new Date().getFullYear()} ${companyName}. All rights reserved.</p>
+              <p style="margin:15px 0 0;color:#ffffff;font-size:11px;">© ${new Date().getFullYear()} ${companyName}. All rights reserved.</p>
             </td>
           </tr>
 

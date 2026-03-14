@@ -907,7 +907,7 @@ export default function CheckoutContent() {
                 <h5 className="text-lg font-semibold tsf-font-sora mb-4">Pay to Bank (QR)</h5>
                 <div className="flex items-center justify-center gap-4">
                   <div className="w-100 h-auto rounded-md overflow-hidden flex items-center justify-center">
-                    <Image src="/images/static-payment-qr.jpg" alt="payment-qr" width={400} height={400} className="object-contain w-full h-full bg-gray-50" />
+                    <Image src="/images/payment-qr.jpg" alt="payment-qr" width={400} height={400} className="object-contain w-full h-full bg-gray-50" />
                   </div>
                   {/* <div className="text-sm">
                       <div className="mb-2"><span className="font-semibold">Account Name:</span> THREE STAR FOODS PRIVATE LIMITED</div>
