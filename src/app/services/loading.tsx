@@ -7,15 +7,13 @@ export default function ServicesLoading() {
     <>
       <Header variant="inner" />
       <main className="min-h-screen pb-[100px]">
-        <div className="bg-[#f2f2f2]">
-          <div className="max-w-[1200px] mx-auto px-6 py-5">
-            <div className="h-4 bg-gray-200 rounded w-48 animate-pulse" />
-          </div>
-        </div>
-        <section className="relative w-full bg-white py-14">
-          <div className="max-w-[1200px] mx-auto px-6">
-            <div className="flex flex-wrap justify-center gap-5">
-              {Array.from({ length: 8 }).map((_, i) => (
+        {/* PageBanner skeleton */}
+        <div className="h-[280px] lg:h-[320px] bg-gray-200 animate-pulse" />
+
+        <section className="relative w-full bg-white">
+          <div className="max-w-[1200px] mx-auto px-6 py-12">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+              {Array.from({ length: 6 }).map((_, i) => (
                 <ServiceCardSkeleton key={i} />
               ))}
             </div>

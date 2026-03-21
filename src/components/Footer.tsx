@@ -34,16 +34,10 @@ const socials = [
 
 export default function Footer() {
   return (
-    <footer className="relative text-white overflow-hidden">
-      {/* Background: dark base + leather texture */}
-      <div className="absolute inset-0 bg-[#002854]" />
-      <Image
-        src="/images/footer-bg.svg"
-        alt=""
-        fill
-        className="object-cover opacity-80 pointer-events-none rotate-180 sm:rotate-0"
-        aria-hidden
-      />
+    <footer
+      className="relative text-white overflow-hidden"
+      style={{ background: 'linear-gradient(135deg, #055c2f 0%, #0a7d40 50%, #044a26 100%)' }}
+    >
 
       {/* ── Main content ──────────────────────────────────────────── */}
       <div className="relative max-w-[1440px] mx-auto px-8 pt-16 pb-10">

@@ -20,7 +20,7 @@ export default function CtaBanner() {
           Discover authentic pieces for spiritual growth and well-being.
         </p>
         <Link
-          href="#"
+          href="/products/category/rudraksha"
           className="inline-flex items-center gap-3 h-[44px] pl-6 pr-2 rounded-[27px] text-white tsf-font-larken-medium text-[16px] tracking-[-0.05em] cursor-pointer transition-opacity hover:opacity-95"
           style={{ background: 'linear-gradient(to right, rgba(244,170,54,0.9), rgba(243,115,53,0.9))' }}
         >

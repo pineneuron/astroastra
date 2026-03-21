@@ -73,6 +73,12 @@ enum CategoryType {
   ALL
 }
 
+enum EventType {
+  ONLINE
+  OFFLINE
+  HYBRID
+}
+
 // ===========================================
 // CORE BUSINESS ENTITIES
 // ===========================================
@@ -545,4 +551,24 @@ enum CouponType {
 enum PageStatus {
   DRAFT
   PUBLISHED
+}
+
+model Event {
+  id          String    @id @default(cuid())
+  title       String
+  slug        String    @unique
+  description String?
+  type        EventType @default(ONLINE)
+  imageUrl    String?   @map("image_url")
+  startDate   DateTime? @map("start_date")
+  startTime   String?   @map("start_time")
+  endTime     String?   @map("end_time")
+  isOngoing   Boolean   @default(false) @map("is_ongoing")
+  isActive    Boolean   @default(true) @map("is_active")
+  isFeatured  Boolean   @default(false) @map("is_featured")
+  sortOrder   Int       @default(0) @map("sort_order")
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+
+  @@map("events")
 }

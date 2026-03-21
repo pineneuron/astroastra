@@ -2,6 +2,7 @@ import Header from '../../components/Header';
 import Footer from '../../components/Footer';
 import ProductsCatalog, { Category } from '../../components/ProductsCatalog';
 import CartSidebar from '../../components/CartSidebar';
+import PageBanner from '../../components/PageBanner';
 import { prisma } from '@/lib/db';
 
 function transformDbToCategory(dbCategories: Awaited<ReturnType<typeof getTopLevelCategories>>): Category[] {
@@ -77,7 +78,10 @@ export default async function ProductsPage({
   return (
     <>
       <Header variant="inner" />
-
+      <PageBanner
+        title="Products"
+        breadcrumbs={[{ label: 'Home', href: '/' }, { label: 'Products' }]}
+      />
       <div className="tsf-our-product pt-18 pb-10">
         <div className="w-full">
           <ProductsCatalog categories={categories} initialCategorySlug={sp?.category} />

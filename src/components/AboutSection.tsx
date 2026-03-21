@@ -51,13 +51,14 @@ export default function AboutSection() {
 
           {/* Button */}
           <Link
-            href="#"
+            href="/about-us"
             className="inline-flex items-center gap-3 h-[42px] lg:h-[45px] px-6 lg:px-7 rounded-[50px] text-white tsf-font-public-sans text-[15px] lg:text-[16px] cursor-pointer"
             style={{
               background: 'linear-gradient(to right, rgba(244,170,54,0.9), rgba(243,115,53,0.9))',
             }}
           >
             More Detail
+            <Image src="/images/hero-arrow-btn.svg" alt="" width={28} height={28} />
           </Link>
         </div>
 

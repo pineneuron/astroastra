@@ -2,7 +2,7 @@ import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
-import Breadcrumb from '@/components/Breadcrumb'
+import PageBanner from '@/components/PageBanner'
 import ProductsCatalog from '@/components/ProductsCatalog'
 import type { Category as CatalogCategory } from '@/components/ProductsCatalog'
 import CartSidebar from '@/components/CartSidebar'
@@ -91,28 +91,21 @@ export default async function ProductCategoryPage({ params }: Props) {
     <>
       <Header variant="inner" />
       <main className="min-h-screen pb-[100px]">
-        <div className="bg-[#f2f2f2]">
-          <div className="max-w-[1200px] mx-auto px-6 py-5">
-            <Breadcrumb
-              items={[
-                { label: 'Home', href: '/' },
-                { label: 'Products', href: '/products' },
-                { label: category.name },
-              ]}
-            />
-          </div>
-        </div>
-
-        <div className="max-w-[1200px] mx-auto px-6 pt-10 pb-4">
-          <h1 className="tsf-font-larken text-black text-[40px] lg:text-[52px] font-bold leading-tight mb-2">
-            {category.name}
-          </h1>
-          {category.description && (
+        <PageBanner
+          title={category.name}
+          breadcrumbs={[
+            { label: 'Home', href: '/' },
+            { label: 'Products', href: '/products' },
+            { label: category.name },
+          ]}
+        />
+        {category.description && (
+          <div className="max-w-[1200px] mx-auto px-6 pt-10 pb-4">
             <p className="tsf-font-public-sans text-gray-600 text-[16px] lg:text-[18px] max-w-[680px]">
               {category.description}
             </p>
+          </div>
           )}
-        </div>
 
         {productItems.length > 0 ? (
           <div className="max-w-[1200px] mx-auto px-6">

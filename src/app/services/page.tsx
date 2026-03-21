@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
-import Breadcrumb from '@/components/Breadcrumb'
+import PageBanner from '@/components/PageBanner'
 import { prisma } from '@/lib/db'
 import ServicesSection from '@/components/ServicesSection'
 
@@ -38,13 +38,14 @@ export default async function ServicesPage() {
   return (
     <>
       <Header variant="inner" />
-      <main className="min-h-screen pb-[100px]">
-        <div className="bg-[#f2f2f2]">
-          <div className="max-w-[1200px] mx-auto px-6 py-5">
-            <Breadcrumb items={[{ label: 'Home', href: '/' }, { label: 'Services' }]} />
-          </div>
+      <main className="min-h-screen pb-[115px]">
+        <PageBanner
+          title="Services"
+          breadcrumbs={[{ label: 'Home', href: '/' }, { label: 'Services' }]}
+        />
+        <div className="max-w-[1200px] mx-auto px-6 pt-[96px]">
+          <ServicesSection services={services} />
         </div>
-        <ServicesSection services={services} />
       </main>
       <Footer />
     </>
